@@ -82,10 +82,14 @@ define([
 
       var _segment = _.isUndefined(segment) ? 0 : segment;
       var request = $scope.ejs.Request().indices(dashboard.indices[_segment]);
+      var atLeastOneQueryId = null;
 
       $scope.panel.queries.ids = querySrv.idsByMode($scope.panel.queries);
       // Build the question part of the query
       _.each($scope.panel.queries.ids, function(id) {
+        if (/and \*$/i.test(querySrv.list[id].query)) {
+          atLeastOneQueryId = id;
+        }
         var _q = $scope.ejs.FilteredQuery(
           querySrv.getEjsObj(id),
           filterSrv.getBoolFilter(filterSrv.ids));
@@ -117,6 +121,13 @@ define([
           return;
         }
 
+        if (atLeastOneQueryId !== null) {
+          //alert(atLeastOneQueryId + ": " + results.facets[atLeastOneQueryId].count);
+          if (results.facets[atLeastOneQueryId].count === 0) {
+            atLeastOneQueryId = null;
+          }
+        }
+
         // Convert facet ids to numbers
         var facetIds = _.map(_.keys(results.facets),function(k){return parseInt(k, 10);});
 
@@ -126,20 +137,22 @@ define([
           ) {
           var i = 0;
           _.each($scope.panel.queries.ids, function(id) {
-            var v = results.facets[id];
-            var hits = _.isUndefined($scope.data[i]) || _segment === 0 ?
-              v.count : $scope.data[i].hits+v.count;
-            $scope.hits += v.count;
+            if (atLeastOneQueryId === null || atLeastOneQueryId === id) {
+              var v = results.facets[id];
+              var hits = _.isUndefined($scope.data[i]) || _segment === 0 ?
+                v.count : $scope.data[i].hits+v.count;
+              $scope.hits += v.count;
 
-            // Create series
-            $scope.data[i] = {
-              info: querySrv.list[id],
-              id: id,
-              hits: hits,
-              data: [[i,hits]]
-            };
+              // Create series
+              $scope.data[i] = {
+                info: querySrv.list[id],
+                id: id,
+                hits: hits,
+                data: [[i,hits]]
+              };
 
-            i++;
+              i++;
+            }
           });
           $scope.$emit('render');
           if(_segment < dashboard.indices.length-1) {
