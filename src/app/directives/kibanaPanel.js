@@ -12,8 +12,8 @@ function (angular) {
       var editorTemplate =
 
         '<div class="row-fluid panel-extra" style="position: relative"><div class="panel-extra-container">' +
-          '<span class="row-button row-text panel-title" style="" ng-show="panel.title">' +
-            '{{panel.title}}' +
+          '<span class="row-button row-text panel-title" style="" ng-show="panel.title" ng-bind-html-unsafe="panel.title">' +
+            //'{{panel.title}}' +
           '</span>'+
 '<span ng-show="panel.showMenu" style="position: absolute; top: 0px; right: 0px">' +
           '<span class="extra row-button" ng-hide="panel.draggable == false">' +
