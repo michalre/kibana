@@ -48,7 +48,7 @@
           </div>
           <!-- Content Panel -->
           <div class="row-fluid" style="position:relative" ng-class="{'dragInProgress':dashboard.panelDragging}" >
-            <kibana-panel type="panel.type" ng-cloak></kibana-panel>
+            <kibana-panel type="panel.type" ng-mouseover="panel.showMenu=true" ng-mouseout="panel.showMenu=false" ng-cloak></kibana-panel>
           </div>
         </div>
 

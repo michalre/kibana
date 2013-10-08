@@ -11,8 +11,11 @@ function (angular) {
 
       var editorTemplate =
 
-        '<div class="row-fluid panel-extra"><div class="panel-extra-container">' +
-
+        '<div class="row-fluid panel-extra" style="position: relative"><div class="panel-extra-container">' +
+          '<span class="row-button row-text panel-title" style="" ng-show="panel.title">' +
+            '{{panel.title}}' +
+          '</span>'+
+'<span ng-show="panel.showMenu" style="position: absolute; top: 0px; right: 0px">' +
           '<span class="extra row-button" ng-hide="panel.draggable == false">' +
             '<span class="row-text pointer" bs-tooltip="\'Drag here to move\'"' +
             'data-drag=true data-jqyoui-options="{revert: \'invalid\',helper:\'clone\'}"'+
@@ -50,10 +53,7 @@ function (angular) {
               '<i class="icon-spinner smaller icon-spin icon-large"></i>' +
             '</span>'+
           '</span>' +
-
-          '<span class="row-button row-text panel-title" ng-show="panel.title">' +
-            '{{panel.title}}' +
-          '</span>'+
+'</span>' +
 
         '</div></div>';
       return {
