@@ -90,10 +90,16 @@ define([
         if (/and \*$/i.test(querySrv.list[id].query)) {
           atLeastOneQueryId = id;
         }
-        var _q = $scope.ejs.FilteredQuery(
-          querySrv.getEjsObj(id),
-          filterSrv.getBoolFilter(filterSrv.ids));
 
+        var _q;
+        if ($scope.panel.ignoreFilters) {
+          _q = querySrv.getEjsObj(id);
+        }
+        else {
+          _q = $scope.ejs.FilteredQuery(
+            querySrv.getEjsObj(id),
+          filterSrv.getBoolFilter(filterSrv.ids));
+        }
         request = request
           .facet($scope.ejs.QueryFacet(id)
             .query(_q)
